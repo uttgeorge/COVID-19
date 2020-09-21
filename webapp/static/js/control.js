@@ -63,14 +63,14 @@ function get_world_stats(){
 		url:"/mm",
 		dataType: "json",
 		success: function(data){
-			ec_multi_option.series[0].data = data.data[0]['Deaths']
-			ec_multi_option.series[1].data = data.data[1]['Deaths']
-			ec_multi_option.series[2].data = data.data[2]['Deaths']
-			ec_multi_option.series[3].data = data.data[3]['Deaths']
-			ec_multi_option.series[4].data = data.data[4]['Deaths']
-			ec_multi_option.series[5].data = data.data[5]['Deaths']
-			ec_multi_option.series[6].data = data.data[6]['Deaths']
-			ec_multi_option.xAxis.data = data.data[0]['Date']
+			ec_multi_option.series[0].data = data.data['Brazil']['Deaths']
+			ec_multi_option.series[1].data = data.data['India']['Deaths']
+			ec_multi_option.series[2].data = data.data['Iran, Islamic Republic of']['Deaths']
+			ec_multi_option.series[3].data = data.data['Italy']['Deaths']
+			ec_multi_option.series[4].data = data.data[ 'Mexico']['Deaths']
+			ec_multi_option.series[5].data = data.data[ 'Russian Federation']['Deaths']
+			ec_multi_option.series[6].data = data.data['United States of America']['Deaths']
+			ec_multi_option.xAxis.data = data.data['Brazil']['Date']
 			ec_multi.setOption(ec_multi_option)
 		},
 		error: function(xhr, type, errorThrown){
@@ -86,7 +86,7 @@ function get_usa_time(){
 		dataType: "json",
 		success: function(data){
 			ec_r1_option.series[0].data = data.data['Deaths']
-			ec_r1_option.series[1].data = data.data['Comfirmed']
+			ec_r1_option.series[1].data = data.data['Confirmed']
 			ec_r1_option.xAxis[0].data = data.data['Date']
 			ec_r1.setOption(ec_r1_option)
 		},

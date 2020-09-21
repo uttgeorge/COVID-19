@@ -1,12 +1,22 @@
 import time
-import boto3
 from datetime import date, timedelta
 import json
 import requests
+import numpy as np
 from datetime import datetime
 from bs4 import BeautifulSoup
 
 today = date.today()
+
+country_list =[
+    'Brazil',
+    'India',
+    'Iran, Islamic Republic of',
+    'Italy',
+    'Mexico',
+    'Russian Federation',
+    'United States of America']
+
 State_List = ['NJ', 'MA', 'WA', 'DE', 'AS', 'GU', 'MN', 'NV', 'TX', 'FL', 'MT', 'RI', 'AK', 'NE', 'NM', 'WV', 'UT',
               'LA', 'MD', 'CT', 'IN', 'PA', 'PR', 'VT', 'HI', 'ID', 'SC', 'AZ', 'KS', 'ND', 'VI', 'AL', 'ME', 'CO',
               'IA', 'KY', 'VA', 'WI', 'CA', 'NH', 'AR', 'OR', 'IL', 'DC', 'NC', 'OK', 'NY', 'WY', 'MO', 'OH', 'SD',
@@ -83,24 +93,37 @@ def get_m1_data():
     #         'date': 20200715, #int(today.strftime("%Y%m%d")),
     #     }
     # )
+    # 'https://corona-api.com/'
+    url = "https://corona-api.com/countries/us"
+    payload = {}
+    headers = {}
 
-    url = 'https://www.cdc.gov/coronavirus/2019-ncov/cases-updates/cases-in-us.html'
-    res = requests.get(url)
-    res.encoding = 'utf-8'
-    html = res.text
-    soup = BeautifulSoup(html,features="lxml")
-    cases = soup.find_all("div", {"class": "callout"})
-    comfirmed = cases[0].find("span").get_text()
-    death = cases[1].find("span").get_text()
-    # USA_hist = json.loads(response.text.encode('utf8'))[:100]
-    # data = json.loads(response.text.encode('utf8'))[0]
+    response = requests.request("GET", url, headers=headers, data=payload)
 
-    # data = USA_hist[0]
+    data = response.text.encode('utf8')
+    usa_stats = json.loads(data)['data']['latest_data']
+    # print(usa_stats)
+
+    comfirmed = usa_stats['confirmed']
+    death = usa_stats['deaths']
     return [comfirmed, death]
+    # url = 'https://www.cdc.gov/coronavirus/2019-ncov/cases-updates/cases-in-us.html'
+    # res = requests.get(url)
+    # res.encoding = 'utf-8'
+    # html = res.text
+    # soup = BeautifulSoup(html,features="lxml")
+    # cases = soup.find_all("div", {"class": "callout"})
+    # comfirmed = cases[0].find("span").get_text()
+    # death = cases[1].find("span").get_text()
+    # # USA_hist = json.loads(response.text.encode('utf8'))[:100]
+    # # data = json.loads(response.text.encode('utf8'))[0]
+    #
+    # # data = USA_hist[0]
+    # return [comfirmed, death]
 
 
 def get_r2_data():
-    url = "https://covidtracking.com/api/states/daily"
+    url = "http://covidtracking.com/api/states/daily"
     payload = {}
     headers = {}
 
@@ -122,7 +145,7 @@ def get_r2_data():
 
 
 def get_world_data():
-    url = "https://api.covid19api.com/summary"
+    url = "http://api.covid19api.com/summary"
 
     payload = {}
     headers = {}
@@ -141,7 +164,9 @@ def get_world_data():
 
 
 def get_news_data():
-    url = "https://newsapi.org/v2/everything?q=COVID&from=2020-07-16&sortBy=publishedAt&apiKey=20d6ff20c2b542de8a6344048704b559&pageSize=100&page=1&Language=en"
+    # 2020 - 07 - 16
+    today = date.today()
+    url = "https://newsapi.org/v2/everything?q=COVID&from=" + str(today - timedelta(days=1)) + "&sortBy=publishedAt&apiKey=20d6ff20c2b542de8a6344048704b559&pageSize=100&page=1&Language=en"
 
     payload = {}
     headers = {
@@ -160,35 +185,43 @@ def get_news_data():
         })
     return res[:100]
 
-country_list =[
-    'Brazil',
-    'India',
-    'Iran, Islamic Republic of',
-    'Italy',
-    'Mexico',
-    'Russian Federation',
-    'United States of America']
+
 
 
 def get_world_stats():
-    res = []
+    res = {}
+    url = "http://api.covid19api.com/total/dayone/country/India"
+    payload = {}
+    headers = {}
+    response = requests.request("GET", url, headers=headers, data=payload, verify=False)
+    data = response.text.encode('utf8')
+    data = json.loads(data)
+    Date = [i['Date'][:10] for i in data][1:]  # [-100:]
     for country in country_list:
-        url = "https://api.covid19api.com/total/dayone/country/{}".format(country)
-
+        url = "http://api.covid19api.com/total/dayone/country/{}".format(country)
+        # print(url)
         payload = {}
         headers = {}
         response = requests.request("GET", url, headers=headers, data=payload)
+        # print(response)
         data = response.text.encode('utf8')
         data = json.loads(data)
-        # res[country] = {}
-        res.append({'country':country,'Deaths':[i['Deaths'] for i in data][-100:], 'Date':[i['Date'][:10] for i in data][-100:]})
-        # res[country]['Date'] = [i['Date'][:10] for i in data][-100:]
+        # print(data)
+        Deaths = list(np.array([i['Deaths'] for i in data][1:])-np.array([i['Deaths'] for i in data][:-1]))
+        Deaths = [int(i) for i in Deaths]
+        # print(Deaths)
+        # if country == 'India':
+        #     Date = [i['Date'][:10] for i in data][1:]#[-100:]
 
+        res[country] = {
+            'Deaths': Deaths,
+            'Date': Date
+        }
     return res
 
 def get_usa_time():
 
-    url = "https://api.covid19api.com/total/dayone/country/United States of America"
+    url = "http://api.covid19api.com/total/dayone/country/United States of America"
 
     payload = {}
     headers = {}
@@ -198,7 +231,7 @@ def get_usa_time():
     res = {
         'Date': [i['Date'][:10] for i in data],
         'Deaths': [i['Deaths']/1000.0 for i in data],
-        'Comfirmed': [i['Confirmed']/1000.0 for i in data]
+        'Confirmed': [i['Confirmed']/1000000.0 for i in data]
     }
     return res
 
@@ -208,9 +241,15 @@ if __name__ == '__main__':
     # print(get_m1_data())
     # print(get_r2_data())
     # print(get_world_data())
+    print(get_m1_data())
+    # print(get_r2_data())
     # print(get_news_data())
-    print(get_usa_time())
 
+
+
+    # a = get_world_stats()
+    # x =  a['Brazil']['Deaths'][0]
+    # print(type(x))
     # data = get_world_stats()
     # data[0]
     # res = []

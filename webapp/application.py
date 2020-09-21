@@ -1,10 +1,9 @@
 from flask import Flask
-from flask import request
 from flask import render_template
 import utils
 from flask import jsonify
 
-app = Flask(__name__)
+application = app = Flask(__name__)
 
 
 @app.route('/')
@@ -35,19 +34,21 @@ def get_r2_data():
 
 @app.route("/world", methods=["get", "post"])
 def get_world_data():
+
     res = utils.get_world_data()
+    # print(res)
     return jsonify({"data": res})
 
 @app.route("/mm", methods=["get", "post"])
 def get_world_stats():
-    res =  utils.get_world_stats()
-
+    res = utils.get_world_stats()
     # print(res)
     return jsonify({"data": res})
 
 @app.route("/r1", methods=["get", "post"])
 def get_usa_time():
     res = utils.get_usa_time()
+    # print(res)
     return jsonify({"data": res})
 
 @app.route("/time", methods=["get", "post"])
@@ -79,4 +80,5 @@ def hello_world3():
 
 
 if __name__ == '__main__':
-    app.run()
+    application.debug = False
+    application.run()

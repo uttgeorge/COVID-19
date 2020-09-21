@@ -10,10 +10,10 @@ $.get('../static/js/extention/eckert3-world.geojson', function (worldJson) {
 	});
 	ec_world_option = {
 		title: {
-			text: '',
+			text: 'World COVID-19 Death Cases',
 			subtext: 'Data from World Health Organization',
 			sublink: 'http://www.who.int',
-			left: 'right'
+			left: 'left'
 		},
 		tooltip: {
 			trigger: 'item',
@@ -43,7 +43,7 @@ $.get('../static/js/extention/eckert3-world.geojson', function (worldJson) {
 		toolbox: {
 			show: true,
 			//orient: 'vertical',
-			left: 'left',
+			left: 'right',
 			top: 'top',
 			feature: {
 				dataView: {readOnly: false},

@@ -35,7 +35,7 @@ var ec_r1_option = {
             type: 'value',
             name: 'Death',
             min: 0,
-            max: 150,
+            max: 300,
             interval: 30,
             axisLabel: {
                 formatter: '{value} k'
@@ -43,12 +43,12 @@ var ec_r1_option = {
         },
         {
             type: 'value',
-            name: 'Comfirmed',
+            name: 'Confirmed',
             min: 0,
-            max: 5000,
-            interval: 1000,
+            max: 10,
+            interval: 1,
             axisLabel: {
-                formatter: '{value} k'
+                formatter: '{value} m'
             }
         }
     ],

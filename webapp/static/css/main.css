@@ -38,7 +38,7 @@ a:hover {
 	position: absolute;
 	width: 70%;
 	/* z-index: 200; */
-	left: 18%;
+	left: 20%;
 	top: -2px;
 	/* background-color: hsla(0, 0%, 100%, 0.9); */
 }
@@ -154,7 +154,7 @@ a:hover {
 #top5{
 	position:absolute;
 	width:20%;
-	height: 38.5%;
+	height: 36.5%;
 	top:6%;
 	left:0%;
 	overflow:hidden;
@@ -182,7 +182,7 @@ a:hover {
 	align-items: left;
 	justify-content: left;
 	/* color: white; */
-	font-size: 13px;
+	font-size: 15px;
 
 /* 	border:0.2px solid #808080; */
 }
@@ -218,13 +218,13 @@ li{
 	position:absolute;
 	width:20%;
 	height: 55%;
-	top:45%;
+	top:43%;
 	left:0%;
-	font-size: medium;
+	font-size: 14PX;
 	color: #ffffff;
 	overflow:hidden;
 	background: rgba(51,51,51,1);
-	/*border:0.2px solid #808080;*/
+	border:0.2px solid #808080;
 }
 #news li{
     line-height:30px;
